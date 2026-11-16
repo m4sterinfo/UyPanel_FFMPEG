@@ -5,14 +5,14 @@
     "_comment": "panel label -> ffmpeg release tarball to compile per-distro (all GPU-enabled). Label = the build's real <major>.<minor> (panel FfmpegBuildsCommand::LABELS); 4.4 replaces the legacy 4.0, built from 4.4.5 + builds/patches/ffmpeg-4-nofix_dts.patch (the legacy '-nofix_dts', which the panel passes on -copyts restreams).",
     "4.4": "4.4.5",
     "7.1": "7.1.5",
-    "8.1": "8.1"
+    "8.0": "8.0.3"
   },
 
   "nv_codec_headers": {
     "_comment": "per-ffmpeg-version nv-codec-headers tag (n12 is too new for 4.x).",
     "4.4": "n11.1.5.3",
     "7.1": "n12.2.72.0",
-    "8.1": "n12.2.72.0"
+    "8.0": "n12.2.72.0"
   },
 
   "distros": {

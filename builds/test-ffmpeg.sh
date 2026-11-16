@@ -12,7 +12,7 @@
 #   ./builds/test-ffmpeg.sh <archive.tar.gz>      # extracts, then tests
 #   FF=/path/ffmpeg FP=/path/ffprobe FF_LABEL=7.1 ./builds/test-ffmpeg.sh
 #
-# The panel bucket label (4.4 | 7.1 | 8.1) gates version-specific expectations.
+# The panel bucket label (4.4 | 7.1 | 8.0) gates version-specific expectations.
 # Taken from $FF_LABEL, else the archive/dir BUILD_INFO, else inferred.
 #
 # Exit: 0 = all hard checks passed, 1 = at least one failed.
@@ -47,7 +47,7 @@ if [[ -z "$FF_LABEL" ]]; then
     case "$ver" in
         *ersion\ 4.*|*-4.*) FF_LABEL="4.4" ;;
         *ersion\ n7.*|*\ 7.*) FF_LABEL="7.1" ;;
-        *ersion\ 8.*|*ersion\ n8.*) FF_LABEL="8.1" ;;
+        *ersion\ 8.*|*ersion\ n8.*) FF_LABEL="8.0" ;;
         *) FF_LABEL="?" ;;
     esac
 fi

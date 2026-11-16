@@ -36,7 +36,7 @@ All are GPU-enabled:
 |-------|----------------|------------------|------|
 | `4.4` | 4.4.5          | n11.1.5.3        | last 4.x; replaces the legacy `4.0`, see `-nofix_dts` |
 | `7.1` | 7.1.5          | n12.2.72.0       | |
-| `8.1` | 8.1            | n12.2.72.0       | |
+| `8.0` | 8.0.3          | n12.2.72.0       | |
 
 > **`4.4` and `-nofix_dts`.** The panel's `4.0` bucket historically shipped
 > the legacy 2018 4.0 binary, which carries a **custom
@@ -59,7 +59,7 @@ All are GPU-enabled:
 | `ubuntu_24` | `ubuntu:24.04` | 2.39  |
 
 **Asset name:** `ffmpeg_<label>_<distro>.tar.gz`
-(e.g. `ffmpeg_8.1_ubuntu_20.tar.gz`). Each archive contains `ffmpeg`, `ffprobe`
+(e.g. `ffmpeg_8.0_ubuntu_24.tar.gz`). Each archive contains `ffmpeg`, `ffprobe`
 and a `BUILD_INFO` file. Every release also ships `hashes.md5` — the panel's
 `GitHubReleases::getAssetHash()` reads it to verify downloads.
 
@@ -97,7 +97,7 @@ Chosen from what the panel code **actually invokes** (grep of `StreamProcess` /
 ```bash
 make build                     # full matrix → out/ffmpeg_*.tar.gz + out/hashes.md5
 make ubuntu_20                 # all versions for one distro
-./builds/build_ffmpeg_all.sh ubuntu_20 8.1   # a single (distro, version) pair
+./builds/build_ffmpeg_all.sh ubuntu_24 8.0   # a single (distro, version) pair
 make release TAG=1.0.0         # publish out/ as a draft GitHub release (see RELEASE.md)
 make check                     # list built assets + hashes
 FORCE=1 make ubuntu_20         # rebuild even if the asset exists
@@ -113,7 +113,7 @@ Every build **self-tests before it is packaged**: `build_ffmpeg.sh` runs
 exact glibc it was built for. Any failure aborts the build and no archive is
 produced — a broken ffmpeg never reaches a release.
 
-`test-ffmpeg.sh` asserts (version-aware for 4.4 / 7.1 / 8.1):
+`test-ffmpeg.sh` asserts (version-aware for 4.4 / 7.1 / 8.0):
 
 - **runs** — `ffmpeg`/`ffprobe -version` exit 0 (the glibc guarantee)
 - **self-contained** — no non-glibc dynamic deps (`readelf -d`)
@@ -138,7 +138,7 @@ match the archive's distro):
 
 ```bash
 ./builds/test-ffmpeg.sh out/ffmpeg_7.1_ubuntu_20.tar.gz
-make test ASSET=out/ffmpeg_8.1_ubuntu_22.tar.gz
+make test ASSET=out/ffmpeg_8.0_ubuntu_24.tar.gz
 FF=/home/uypanel/bin/ffmpeg_bin/7.1/ffmpeg FP=.../ffprobe FF_LABEL=7.1 ./builds/test-ffmpeg.sh
 ```
 
@@ -178,5 +178,5 @@ MaxMind/proxy pattern:
 2. A `version.json` index + a MaxMind-style cron to refresh builds.
 3. `FfmpegPaths` still resolves the label → dir; note it currently maps the
    setting `8.0` → `FFMPEG_BIN_80`, while this repo labels the modern build
-   `8.1` — reconcile the label when wiring the fetch.
+   `8.0` — the label now matches the panel bucket directly.
 4. Drop the `ffmpeg_bin/*` binaries from Git LFS once fetched at install.

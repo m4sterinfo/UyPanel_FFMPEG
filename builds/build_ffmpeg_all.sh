@@ -16,7 +16,7 @@ set -euo pipefail
 # Usage:
 #   ./builds/build_ffmpeg_all.sh                     # full matrix, then hashes.md5
 #   ./builds/build_ffmpeg_all.sh ubuntu_20           # all versions for one distro
-#   ./builds/build_ffmpeg_all.sh ubuntu_20 8.1       # a single (distro, version) pair
+#   ./builds/build_ffmpeg_all.sh ubuntu_24 8.0       # a single (distro, version) pair
 #   ./builds/build_ffmpeg_all.sh hashes              # (re)generate out/hashes.md5 only
 #   ./builds/build_ffmpeg_all.sh test [distro]       # self-test every built archive in its distro
 #   ./builds/build_ffmpeg_all.sh release 1.0.0       # publish out/ as a GitHub release (DRAFT=0 → public)
@@ -31,7 +31,7 @@ FORCE="${FORCE:-0}"
 
 # Per-distro build cache: codec deps (/opt/ffmpeg_deps) are identical across the ffmpeg
 # versions of ONE distro (same container/glibc), so we mount a distro-keyed cache — the
-# ~19 codecs compile once per distro, then 7.1/8.1 reuse them (only ffmpeg itself
+# ~19 codecs compile once per distro, then 7.1/8.0 reuse them (only ffmpeg itself
 # rebuilds). NEVER shared between distros (ABI/glibc).
 # Disable with NO_CACHE=1. Cache files are root-owned (docker) → `make clean-cache`.
 CACHE_DIR="${CACHE_DIR:-$ROOT_DIR/.cache}"
@@ -48,14 +48,14 @@ USE_CACHE=1; [[ -n "${NO_CACHE:-}" ]] && USE_CACHE=0
 declare -A FFMPEG_VERSIONS=(
     [4.4]="4.4.5"
     [7.1]="7.1.5"
-    [8.1]="8.1"
+    [8.0]="8.0.3"
 )
 # Panel label -> nv-codec-headers tag (must match the ffmpeg major; n12 is too
 # new for 4.x). Passed to the builder as V_NVHEADERS.
 declare -A NVHEADERS=(
     [4.4]="n11.1.5.3"
     [7.1]="n12.2.72.0"
-    [8.1]="n12.2.72.0"
+    [8.0]="n12.2.72.0"
 )
 # Distro tag -> docker base image.
 declare -A DISTROS=(
@@ -67,7 +67,7 @@ declare -A DISTROS=(
 )
 # Deterministic ordering (assoc arrays are unordered).
 DISTRO_ORDER=(debian_12 debian_13 ubuntu_20 ubuntu_22 ubuntu_24)
-VERSION_ORDER=(4.4 7.1 8.1)
+VERSION_ORDER=(4.4 7.1 8.0)
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; CYAN='\033[0;36m'; NC='\033[0m'
 msg()  { echo -e "${GREEN}>>>${NC} $*"; }

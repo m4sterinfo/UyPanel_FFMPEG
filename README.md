@@ -1,8 +1,8 @@
-# XC_VM_FFMPEG
+# UyPanel_FFMPEG
 
-Per-distro static **FFmpeg + ffprobe** builds for [XC_VM](https://github.com/Vateron-Media/XC_VM) nodes.
+Per-distro static **FFmpeg + ffprobe** builds for [UyPanel](https://github.com/m4sterinfo/UyPanel) nodes.
 
-Extracted from `XC_VM_Binaries` into its own repository so FFmpeg has an
+Extracted from the main binaries repository into its own repository so FFmpeg has an
 independent release cadence, and — more importantly — so it can be built **once
 per target distribution** instead of once for all of them.
 
@@ -34,19 +34,19 @@ All are GPU-enabled:
 
 | Label | FFmpeg tarball | nv-codec-headers | Note |
 |-------|----------------|------------------|------|
-| `4.4` | 4.4.5          | n11.1.5.3        | last 4.x; replaces XUI's `4.0`, see `-nofix_dts` |
+| `4.4` | 4.4.5          | n11.1.5.3        | last 4.x; replaces the legacy `4.0`, see `-nofix_dts` |
 | `7.1` | 7.1.5          | n12.2.72.0       | |
 | `8.1` | 8.1            | n12.2.72.0       | |
 
 > **`4.4` and `-nofix_dts`.** The panel's `4.0` bucket historically shipped
-> XUI.one's 2018 binary (`extra-version=XUI10FFMPEG`), which carries a **custom
+> the legacy 2018 4.0 binary, which carries a **custom
 > `-nofix_dts` flag that does not exist in stock FFmpeg**, and the panel runs every
 > `-copyts` restream on `4.0` with it. Stock 4.4.5 without it clamps each packet
 > after a backward DTS step in the source to `last_dts+1`: frames pile up in a few
 > ms, the panel reads 200+ fps, audio drifts or drops out. So the `4.4` build
 > applies [`builds/patches/ffmpeg-4-nofix_dts.patch`](builds/patches/ffmpeg-4-nofix_dts.patch)
-> (XUI's switch and its `mux.c` relaxation, taken from the Xtream Codes source —
-> full upstream diff in [`builds/patches/xtream-codes-4.0-reference.diff`](builds/patches/xtream-codes-4.0-reference.diff)) and writes `Patches  : nofix_dts` to
+> (the legacy switch and its `mux.c` relaxation — full reference diff in
+> [`builds/patches/legacy-4.0-reference.diff`](builds/patches/legacy-4.0-reference.diff)) and writes `Patches  : nofix_dts` to
 > `BUILD_INFO`; the panel's `FfmpegPaths::fixDts()` passes the flag only when it
 > sees that line. Self-test check 9 replays the DTS step.
 
@@ -65,7 +65,7 @@ and a `BUILD_INFO` file. Every release also ships `hashes.md5` — the panel's
 
 ## Codec set
 
-Chosen from what XC_VM code **actually invokes** (grep of `StreamProcess` /
+Chosen from what the panel code **actually invokes** (grep of `StreamProcess` /
 `ProfileService`), not the union of the deployed builds:
 
 - **Video encode:** `libx264`, `libx265`, and **`nvenc` + `cuvid` + `ffnvcodec`**
@@ -139,7 +139,7 @@ match the archive's distro):
 ```bash
 ./builds/test-ffmpeg.sh out/ffmpeg_7.1_ubuntu_20.tar.gz
 make test ASSET=out/ffmpeg_8.1_ubuntu_22.tar.gz
-FF=/home/xc_vm/bin/ffmpeg_bin/7.1/ffmpeg FP=.../ffprobe FF_LABEL=7.1 ./builds/test-ffmpeg.sh
+FF=/home/uypanel/bin/ffmpeg_bin/7.1/ffmpeg FP=.../ffprobe FF_LABEL=7.1 ./builds/test-ffmpeg.sh
 ```
 
 ## Files
@@ -169,7 +169,7 @@ FF=/home/xc_vm/bin/ffmpeg_bin/7.1/ffmpeg FP=.../ffprobe FF_LABEL=7.1 ./builds/te
 
 ## Panel integration (separate task — not in this repo yet)
 
-To consume these builds the panel side (`XC_VM`) needs, mirroring the
+To consume these builds the panel side (`UyPanel`) needs, mirroring the
 MaxMind/proxy pattern:
 
 1. `bin/install/update_binaries.sh` (or a dedicated fetch) to detect the node's

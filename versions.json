@@ -1,8 +1,8 @@
 {
-  "_comment": "Build matrix for XC_VM_FFMPEG. Source of truth for local builds is the bash arrays in build_ffmpeg_all.sh; this file mirrors them for humans. Keep in sync.",
+  "_comment": "Build matrix for UyPanel_FFMPEG. Source of truth for local builds is the bash arrays in build_ffmpeg_all.sh; this file mirrors them for humans. Keep in sync.",
 
   "ffmpeg_versions": {
-    "_comment": "panel label -> ffmpeg release tarball to compile per-distro (all GPU-enabled). Label = the build's real <major>.<minor> (panel FfmpegBuildsCommand::LABELS); 4.4 replaces XUI's 4.0, built from 4.4.5 + builds/patches/ffmpeg-4-nofix_dts.patch (XUI's '-nofix_dts', which the panel passes on -copyts restreams).",
+    "_comment": "panel label -> ffmpeg release tarball to compile per-distro (all GPU-enabled). Label = the build's real <major>.<minor> (panel FfmpegBuildsCommand::LABELS); 4.4 replaces the legacy 4.0, built from 4.4.5 + builds/patches/ffmpeg-4-nofix_dts.patch (the legacy '-nofix_dts', which the panel passes on -copyts restreams).",
     "4.4": "4.4.5",
     "7.1": "7.1.5",
     "8.1": "8.1"
@@ -25,7 +25,7 @@
   },
 
   "codecs": {
-    "_comment": "Target codec/feature set, chosen from what XC_VM code actually invokes (see README). Not the union of the three deployed builds.",
+    "_comment": "Target codec/feature set, chosen from what the panel code actually invokes (see README). Not the union of the three deployed builds.",
     "video_encode": ["libx264", "libx265", "nvenc", "cuvid", "ffnvcodec"],
     "video_extra": ["libvpx"],
     "audio": ["aac (native)", "libmp3lame", "libopus", "libvorbis", "libfdk-aac", "dca/DTS (native decode)"],

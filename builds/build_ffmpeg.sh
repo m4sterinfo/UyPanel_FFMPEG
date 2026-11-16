@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 # ──────────────────────────────────────────────────────────────────────────────
-# XC_VM FFmpeg static builder — one distro per run
+# UyPanel FFmpeg static builder — one distro per run
 #
 # Builds a *portable* FFmpeg + ffprobe where every codec/library is compiled
 # from source as a static .a and linked INTO the binary. The only dynamic
@@ -183,7 +183,7 @@ build() {
 # The docker image already has them (install_tools.sh is its own layer); a bare host
 # gets them installed once.
 install_build_tools() {
-    if [[ -f /etc/xcvm-build-tools ]]; then
+    if [[ -f /etc/uypanel-build-tools ]]; then
         msg "Build tools preinstalled (image layer)"
     else
         step "Installing build tools (APT)"
@@ -404,7 +404,7 @@ build_ffmpeg() {
     make distclean 2>/dev/null || true
     local ff_major="${V_FFMPEG%%.*}"
 
-    # 4.x stands in for XUI's 4.0, which the panel runs with `-nofix_dts`: restore
+    # 4.x stands in for the legacy 4.0, which the panel runs with `-nofix_dts`: restore
     # that switch (see the patch header). fetch() re-extracts, so the tree is clean.
     if [[ "$ff_major" == 4 ]]; then
         patch -p1 --forward < "$(cd "$(dirname "$0")" && pwd)/patches/ffmpeg-4-nofix_dts.patch" \
@@ -412,7 +412,7 @@ build_ffmpeg() {
     fi
 
     # ffmpeg-level libfribidi/libharfbuzz options only exist from 6.1+; the 4.x
-    # bucket (XUI's legacy DTS binary) predates them and configure would abort.
+    # bucket (the legacy DTS binary) predates them and configure would abort.
     # libass still links fribidi/harfbuzz internally, so text rendering is intact.
     local text_shaping="--enable-libfribidi --enable-libharfbuzz"
     if ! [ "${ff_major:-0}" -ge 5 ] 2>/dev/null; then
@@ -443,7 +443,7 @@ build_ffmpeg() {
         --extra-cflags="-I$DEPS_PREFIX/include" \
         --extra-ldflags="-L$DEPS_PREFIX/lib -L$DEPS_PREFIX/lib64 -static-libgcc" \
         --extra-libs="-lpthread -lm -ldl $libstdcxx_a" \
-        --extra-version="XCVM" \
+        --extra-version="UyPanel" \
         --enable-static --disable-shared --enable-pic \
         --disable-debug --disable-doc --disable-ffplay \
         --enable-gpl --enable-version3 --enable-nonfree \
@@ -517,7 +517,7 @@ package() {
     verify_static "$stage/ffprobe"
 
     cat > "$stage/BUILD_INFO" <<EOF
-Built by : XC_VM FFmpeg static builder
+Built by : UyPanel FFmpeg static builder
 FFmpeg   : ${V_FFMPEG}
 Label    : ${FF_LABEL}
 Distro   : ${FF_DISTRO:-n/a}
@@ -576,7 +576,7 @@ show_features() {
 # ── Main ───────────────────────────────────────────────────────────────────────
 main() {
     [[ "$(id -u)" -eq 0 ]] || die "must run as root"
-    step "XC_VM FFmpeg static builder — FFmpeg ${V_FFMPEG}, all codecs baked in"
+    step "UyPanel FFmpeg static builder — FFmpeg ${V_FFMPEG}, all codecs baked in"
     command -v apt-get >/dev/null 2>&1 || die "this builder targets Debian (apt-get not found)"
 
     install_build_tools

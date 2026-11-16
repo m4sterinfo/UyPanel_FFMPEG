@@ -1,13 +1,13 @@
 REFERENCE ONLY - not applied by the build (build_ffmpeg.sh applies ffmpeg-4-nofix_dts.patch by name).
 
-Xtream Codes' changes in the FFmpeg they shipped as "4.0" (XUI binary: N-92517-gd0f5942-XUI10FFMPEG).
+Changes in the legacy FFmpeg binary shipped as "4.0" (version string N-92517-gd0f5942, 2018).
 Source: github.com/FFmpeg/FFmpeg compare e895b800fe...d0f594202a
   base   e895b800fe  upstream master, 2018-11-21
-  head   d0f594202a  8 commits by "Xtream Codes" <support@xtream-codes.com>, 2018-11-23..12-04
+  head   d0f594202a  8 commits, 2018-11-23..12-04
 
 Carried into ffmpeg-4-nofix_dts.patch: -fix_dts option (fftools) and the mux.c DTS/PTS check removal.
 Not carried: -progress reopen-per-report (panel tails a local file), mpegtsenc startcode check
-removal, segment.c "+delete" list flag (panel uses hls delete_segments). The 7.1 and 8.0 XUI/XCVM
+removal, segment.c "+delete" list flag (panel uses hls delete_segments). The 7.1 and 8.0 legacy
 binaries are stock FFmpeg (n7.1.1, 8.0) with none of these changes.
 
 diff --git a/fftools/ffmpeg.c b/fftools/ffmpeg.c

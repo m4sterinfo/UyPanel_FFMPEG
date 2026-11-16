@@ -1,14 +1,15 @@
-XUI's `-nofix_dts` for the 4.0 bucket (FFmpeg 4.4.x).
+Legacy `-nofix_dts` behavior for the 4.0 bucket (FFmpeg 4.4.x).
 
 The panel runs live restreams with `-copyts ... -nofix_dts` on the 4.0 binary.
-XUI's 2018 build (N-92517-gd0f5942-XUI10FFMPEG) added a `fix_dts` bool (default 1)
+The legacy 2018 4.0 build added a `fix_dts` bool (default 1)
 that gates fftools' write_packet() DTS fixup, and dropped libavformat's
 monotonic / pts>=dts rejection. Stock ffmpeg has neither: on a backward DTS step
 in the source it clamps every packet to last_dts+1 until the source catches up,
 so hundreds of frames land in a few ms — the panel reads 200+ fps, audio and
 video drift apart, audio drops out. With this patch `-nofix_dts` passes the
-source timestamps through untouched, as XUI did; without it nothing changes
-(fix_dts on → fftools keeps DTS monotonic, so the dropped lavf checks never fired).
+source timestamps through untouched, as the legacy build did; without it nothing
+changes (fix_dts on → fftools keeps DTS monotonic, so the dropped lavf checks
+never fired).
 
 diff -ru a/fftools/ffmpeg.c b/fftools/ffmpeg.c
 --- a/fftools/ffmpeg.c
@@ -77,7 +78,7 @@ diff -ru a/libavformat/mux.c b/libavformat/mux.c
 -               st->index);
 -        return AVERROR(EINVAL);
 -    }
-+    /* XC_VM: no monotonic / pts>=dts rejection here, as in XUI's 4.0 build. With
++    /* UyPanel: no monotonic / pts>=dts rejection here, as in the legacy 4.0 build. With
 +     * -nofix_dts ffmpeg hands the muxer the source timestamps untouched (a
 +     * backward step passes through as a discontinuity); with fix_dts on (the
 +     * default) fftools already guarantees what these checks enforced. */

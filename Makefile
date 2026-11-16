@@ -1,4 +1,4 @@
-# XC_VM_FFMPEG — per-distro static FFmpeg builder.
+# UyPanel_FFMPEG — per-distro static FFmpeg builder.
 # Thin wrapper over build_ffmpeg_all.sh (Docker required).
 
 SHELL   := /bin/bash
@@ -10,7 +10,7 @@ DISTROS := debian_12 debian_13 ubuntu_20 ubuntu_22 ubuntu_24
 .PHONY: build hashes release clean clean-cache clean-ccache check test help $(DISTROS)
 
 help:
-	@echo "XC_VM_FFMPEG targets:"
+	@echo "UyPanel_FFMPEG targets:"
 	@echo "  make build         - build the full (version x distro) matrix + hashes.md5"
 	@echo "  make <distro>      - build all versions for one distro ($(DISTROS))"
 	@echo "  make hashes        - (re)generate $(OUT_DIR)/hashes.md5"

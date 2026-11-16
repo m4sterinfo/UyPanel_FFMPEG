@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 # ──────────────────────────────────────────────────────────────────────────────
-# XC_VM_FFMPEG — matrix driver
+# UyPanel_FFMPEG — matrix driver
 #
 # Builds a static FFmpeg for every (panel version × distro) pair by running
 # build_ffmpeg.sh inside each distro's own container (docker/Dockerfile, chosen
@@ -43,8 +43,8 @@ USE_CACHE=1; [[ -n "${NO_CACHE:-}" ]] && USE_CACHE=0
 # ── Build matrix — single source of truth (versions.json mirrors this) ─────────
 # Panel label -> ffmpeg release tarball version.
 # A label is the build's real <major>.<minor> (the panel's FfmpegBuildsCommand::LABELS).
-# "4.4" (FFmpeg 4.4.5, last 4.x) replaces XUI's "4.0": GPU enabled, native DTS
-# decode, and XUI's "-nofix_dts" restored by builds/patches/ffmpeg-4-nofix_dts.patch.
+# "4.4" (FFmpeg 4.4.5, last 4.x) replaces the legacy "4.0": GPU enabled, native DTS
+# decode, and the legacy "-nofix_dts" restored by builds/patches/ffmpeg-4-nofix_dts.patch.
 declare -A FFMPEG_VERSIONS=(
     [4.4]="4.4.5"
     [7.1]="7.1.5"
@@ -86,9 +86,9 @@ build_image() {
     local base="${DISTROS[$distro]}"
     [[ -n "$base" ]] || die "unknown distro: $distro"
     local logfile="$LOG_DIR/image_${distro}.log"
-    step "IMAGE xcvm-ffmpeg:$distro (base=$base)"
+    step "IMAGE uypanel-ffmpeg:$distro (base=$base)"
     docker build \
-        -t "xcvm-ffmpeg:$distro" \
+        -t "uypanel-ffmpeg:$distro" \
         --build-arg BASE_IMAGE="$base" \
         -f "$DOCKERFILE" \
         "$ROOT_DIR" 2>&1 | tee "$logfile"
@@ -126,7 +126,7 @@ build_pair() {
         -e "FF_LABEL=$label" \
         -e "FF_DISTRO=$distro" \
         -e "V_NVHEADERS=${NVHEADERS[$label]}" \
-        "xcvm-ffmpeg:$distro" 2>&1 | tee "$logfile"
+        "uypanel-ffmpeg:$distro" 2>&1 | tee "$logfile"
     [[ -f "$OUT_DIR/$asset" ]] || die "expected $asset was not produced"
 }
 
@@ -174,11 +174,11 @@ test_assets() {
         for v in "${VERSION_ORDER[@]}"; do
             a="ffmpeg_${v}_${d}.tar.gz"
             [[ -f "$OUT_DIR/$a" ]] || continue
-            docker image inspect "xcvm-ffmpeg:$d" >/dev/null 2>&1 || build_image "$d"
+            docker image inspect "uypanel-ffmpeg:$d" >/dev/null 2>&1 || build_image "$d"
             step "TEST $a"
             docker run --rm -v "$OUT_DIR:/out:ro" \
                 -v "$ROOT_DIR/builds/test-ffmpeg.sh:/test-ffmpeg.sh:ro" \
-                --entrypoint /bin/bash "xcvm-ffmpeg:$d" /test-ffmpeg.sh "/out/$a" || failed+=("$a")
+                --entrypoint /bin/bash "uypanel-ffmpeg:$d" /test-ffmpeg.sh "/out/$a" || failed+=("$a")
             tested=$((tested + 1))
         done
     done

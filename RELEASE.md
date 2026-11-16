@@ -1,4 +1,4 @@
-# Releasing XC_VM_FFMPEG
+# Releasing UyPanel_FFMPEG
 
 Releases carry a per-distro static FFmpeg build for every panel version. Assets
 are named `ffmpeg_<label>_<distro>.tar.gz` and accompanied by `hashes.md5`, which

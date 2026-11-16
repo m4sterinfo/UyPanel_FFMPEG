@@ -42,7 +42,7 @@ USE_CACHE=1; [[ -n "${NO_CACHE:-}" ]] && USE_CACHE=0
 
 # ── Build matrix — single source of truth (versions.json mirrors this) ─────────
 # Panel label -> ffmpeg release tarball version.
-# A label is the build's real <major>.<minor> (the panel's FfmpegBuildsCommand::LABELS).
+# A label is the build's real <major>.<minor> (the panel bucket dirs in bin/ffmpeg_bin/).
 # "4.4" (FFmpeg 4.4.5, last 4.x) replaces the legacy "4.0": GPU enabled, native DTS
 # decode, and the legacy "-nofix_dts" restored by builds/patches/ffmpeg-4-nofix_dts.patch.
 declare -A FFMPEG_VERSIONS=(

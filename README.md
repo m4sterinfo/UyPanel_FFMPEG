@@ -29,7 +29,7 @@ guessing.
 ## Build matrix
 
 `(label) × (distro)` → one release asset each. A label is the build's real
-`<major>.<minor>` — the names the panel fetches (`FfmpegBuildsCommand::LABELS`).
+`<major>.<minor>` — matching the panel bucket dirs in `bin/ffmpeg_bin/`.
 All are GPU-enabled:
 
 | Label | FFmpeg tarball | nv-codec-headers | Note |

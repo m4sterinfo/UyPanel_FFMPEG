@@ -2,7 +2,7 @@
   "_comment": "Build matrix for UyPanel_FFMPEG. Source of truth for local builds is the bash arrays in build_ffmpeg_all.sh; this file mirrors them for humans. Keep in sync.",
 
   "ffmpeg_versions": {
-    "_comment": "panel label -> ffmpeg release tarball to compile per-distro (all GPU-enabled). Label = the build's real <major>.<minor> (panel FfmpegBuildsCommand::LABELS); 4.4 replaces the legacy 4.0, built from 4.4.5 + builds/patches/ffmpeg-4-nofix_dts.patch (the legacy '-nofix_dts', which the panel passes on -copyts restreams).",
+    "_comment": "panel label -> ffmpeg release tarball to compile per-distro (all GPU-enabled). Label = the build's real <major>.<minor>, matching the panel bucket dirs in bin/ffmpeg_bin/. 4.4 replaces the legacy 4.0, built from 4.4.5 + builds/patches/ffmpeg-4-nofix_dts.patch (the legacy '-nofix_dts', which the panel passes on -copyts restreams).",
     "4.4": "4.4.5",
     "7.1": "7.1.5",
     "8.0": "8.0.3"
